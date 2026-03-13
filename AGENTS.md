@@ -69,118 +69,30 @@ src/
 
 docs/               # 需求文档目录
 .opencode/
-└── agents/         # Agent 角色配置
+├── agents/         # Agent 角色配置
+└── rules/          # 规则文件（按需加载）
 ```
 
-## 构建 / 开发命令
+---
 
-```bash
-npm run dev      # 启动开发服务器
-npm run build    # 构建生产版本
-npm run preview  # 预览生产版本
-```
+## 外部文件加载规则
 
-### 测试（未配置）
+**重要提示**：以下文件引用采用懒加载模式，请根据实际任务需要加载对应文件，**不要 preemptively 加载所有引用**。
 
-```bash
-npm install -D vitest @vue/test-utils jsdom
-npm run test              # 运行所有测试
-npm run test -- filename.spec.js  # 运行单个测试文件
-npm run test -- --watch   # 监听模式
-npm run test -- --coverage  # 覆盖率
-```
+### 代码风格指南
 
-### 代码检查（未配置）
+当您编写或修改代码时，请立即加载以下文件作为强制规范：
 
-```bash
-npm install -D eslint @eslint/js eslint-plugin-vue
-npm run lint     # 运行代码检查
-npm run lint -- --fix  # 自动修复
-```
+@.opencode/rules/code-style.md - 代码风格指南
 
-## 代码风格指南
+### 开发命令参考
 
-### Vue 组件
+当您需要执行构建、启动开发服务器或运行脚本时，请加载：
 
-- 使用 Composition API + `<script setup>` 语法
-- 使用 `defineProps` 定义属性，`defineEmits` 定义事件
-- 尽量使用 TypeScript
+@.opencode/rules/dev-commands.md - 构建与开发命令
 
-### 文件命名
+### 测试与代码检查
 
-- **组件**: PascalCase (`UserProfile.vue`)
-- **组合式函数**: camelCase，以 `use` 开头 (`useAuth.js`)
-- **工具函数**: camelCase (`formatDate.js`)
-- **常量**: SCREAMING_SNAKE_CASE (`API_ENDPOINTS.js`)
+当您需要配置测试、代码检查功能，或执行相关任务时，请加载：
 
-### 导入顺序
-
-1. Vue 核心
-2. 外部库（Element Plus、Vue Router、Pinia 等）
-3. 内部模块（使用 `@/` 别名）
-4. 资源文件
-
-组间用空行分隔。
-
-### TypeScript
-
-- 新文件使用 `.ts` 或 `<script lang="ts">`
-- 为属性和 API 响应定义接口
-- 避免使用 `any`，不确定时使用 `unknown`
-
-### 状态管理（Pinia）
-
-- 在 `src/stores/` 目录创建 store
-- 使用组合式 store 语法（函数形式）
-- store 名称使用单数名词
-
-### 路由
-
-- 在 `src/router/` 定义路由
-- 使用懒加载: `component: () => import('./views/Home.vue')`
-
-### 样式（Less）
-
-项目已集成 Less，在 Vue 组件中使用 `<style lang="less">` 即可：
-
-```vue
-<style lang="less">
-// 变量
-@primary-color: #409eff;
-
-// 混入
-.border-radius(@radius: 4px) {
-  border-radius: @radius;
-}
-
-.component {
-  color: @primary-color;
-  
-  .child {
-    .border-radius();
-  }
-}
-</style>
-```
-
-### 错误处理
-
-- 异步操作使用 try-catch 包裹
-- 通过 ElMessage 显示用户友好的错误信息
-- 记录错误用于调试
-
-### 最佳实践
-
-1. 保持组件小巧 —— 单一职责
-2. 将可复用逻辑提取为组合式函数
-3. 避免属性穿透 —— 使用 provide/inject 或 Pinia
-4. 使用 `v-memo`、`shallowRef` 优化性能
-5. 添加 ARIA 属性提升可访问性
-6. 过滤用户输入确保安全
-
-### 提交前
-
-1. 修改逻辑相关代码或配置后，执行 `/init` 指令同步更新 AGENTS.md
-2. 运行 `npm run build` —— 无错误
-3. 检查控制台错误
-4. 测试错误状态和加载状态
+@.opencode/rules/testing-linting.md - 测试与代码检查指南（当前未配置，仅作未来参考）
