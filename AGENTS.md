@@ -59,10 +59,12 @@
 
 - **任务拆分**：由 coreCoordinatorAgent 负责将开发任务拆分为一个一个小功能任务
 - **拆分结果记录**：将拆分结果记录到项目 `docs/DevProcess/` 目录中（如 `{任务名}-任务拆分.md`），供后续开发参考
+- **任务交接**：拆分完成后，由 coreCoordinatorAgent 调度开发 agent（coreDevelopmentAgent / businessDevelopmentAgent）开始执行第一个小任务，并将拆分结果文档路径传递给开发 agent
+- **开发 agent 任务启动**：开发 agent 收到任务后，必须先查阅 `docs/DevProcess/` 目录中的开发进度文档，了解当前任务进度
 - **开发→测试**：每个小功能任务完成后，进入测试验收环节
 - **验收结果处理**：
   - 验收不通过 → 退回开发环节进行修复
-  - 验收通过 → 闭环当前任务，继续执行下一个小功能任务
+  - 验收通过 → 更新开发进度文档，由 coreCoordinatorAgent 调度继续执行下一个小功能任务
 - **全流程闭环**：所有小任务完成后，进入工程化部署阶段
 
 ### 开发过程记录规则
