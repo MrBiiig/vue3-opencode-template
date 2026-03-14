@@ -16,11 +16,12 @@
 
 ## OpenCode Agent 配置
 
-项目已配置 8 个角色的 Agent 定义文件，位于 `.opencode/agents/` 目录：
+项目已配置 9 个角色的 Agent 定义文件，位于 `.opencode/agents/` 目录：
 
 | Agent 文件 | 角色 |
 |-----------|------|
-| `coreCoordinatorAgent.md` | 核心协调 Agent |
+| `coreCoordinatorAgent.md` | 核心协调 Agent（执行模式） |
+| `coreCoordinatorPlanAgent.md` | 核心协调 Agent（计划模式） |
 | `requirementAnalysisAgent.md` | 需求分析与管理 Agent |
 | `experienceVisualDesignAgent.md` | 体验与视觉设计 Agent |
 | `techArchitectureAgent.md` | 技术架构 Agent |
@@ -30,6 +31,13 @@
 | `engineeringDevOpsAgent.md` | 工程化与 DevOps Agent |
 
 每个 Agent 都有其专属的系统提示词配置，执行特定任务时会自动调用对应角色。
+
+## Agent 模式说明
+
+### 执行模式 vs 计划模式
+
+- **执行模式（coreCoordinatorAgent）**：直接进入开发流程，负责任务拆解、调度开发、进度追踪、验收闭环
+- **计划模式（coreCoordinatorPlanAgent）**：只读分析不改动代码，通过计划评审流程输出开发方案或调整方案
 
 ## 多 Agent 开发流程规则
 
@@ -52,6 +60,27 @@
 - 核心开发/业务开发 Agent 按需分工实现
 - testQualityAssuranceAgent 仅执行功能回归测试
 - engineeringDevOpsAgent 仅执行增量构建/部署
+
+### 4. 计划评审流程（coreCoordinatorPlanAgent 专用）
+
+当使用 coreCoordinatorPlanAgent 时，进入与开发流程平行的计划评审流程：
+
+- **方案输出**：coreCoordinatorPlanAgent 通过读取项目信息、自己分析 + 调度相关子 Agent，输出开发方案或调整方案
+- **全员评审**：将方案交给所有相关 Agent（如 techArchitectureAgent、requirementAnalysisAgent 等）进行评审
+- **评审调整**：如有评审意见，coreCoordinatorPlanAgent 据此调整方案后重新提交评审
+- **闭环确认**：直至所有 Agent 确认无需调整，形成最终方案
+- **输出结果**：将最终方案输出给用户
+
+> **注意**：计划评审流程中，coreCoordinatorPlanAgent 只能读取项目信息进行分析，**不执行任何代码修改操作**
+
+#### 简单调整任务执行原则
+
+在执行简单功能调整时，需遵循以下原则：
+
+- **全局分析**：先定位问题根本原因，再设计整体解决方案，避免只针对表象修复
+- **避免副作用**：修复问题时需纵观项目全局，确保不因解决一个问题而引发其他问题
+- **系统思维**：从整体布局、组件层级、样式继承等维度综合考量，避免「拆东墙补西墙」
+- **验证完整性**：修改后需验证相关联的功能模块是否正常运行
 
 ### 任务执行与验收规则
 
